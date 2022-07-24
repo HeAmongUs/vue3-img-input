@@ -11,14 +11,13 @@
 import VImageInput from "@/components/VImageInput";
 
 const ex1 = require("@/assets/ex1.jpg");
-const ex2 = require("@/assets/ex2.jpg");
 export default {
   name: "HelloWorld",
   components: { VImageInput },
   data() {
     return {
       image1: ex1,
-      image2: ex2,
+      image2: null,
     };
   },
 };
