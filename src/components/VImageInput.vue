@@ -44,8 +44,8 @@
       >
         <img class="selected-image" alt="" :src="imgSrc" />
       </label>
-      <slot name="remove-icon">
-        <div @click.prevent="removeImage" v-if="removable" class="remove-icon">
+      <div @click.prevent="removeImage" v-if="removable" class="remove-icon">
+        <slot name="remove-icon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 320 512"
@@ -56,8 +56,8 @@
               d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"
             />
           </svg>
-        </div>
-      </slot>
+        </slot>
+      </div>
     </div>
     <input
       type="file"
@@ -74,7 +74,7 @@
 let uid = 0;
 export default {
   name: "VImageInput",
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue", "error:fileSize", "error:fileType"],
   props: {
     modelValue: {
       type: [Object, String, null],
@@ -84,11 +84,17 @@ export default {
       required: false,
       default: false,
     },
+    maxFileSize: {
+      type: Number,
+      required: false,
+      default: 10,
+    },
     acceptedTypes: {
       type: Array,
       required: false,
-      // eslint-disable-next-line vue/require-valid-default-prop
-      default: ["png", "svg", "jpg", "jpeg"],
+      default: () => {
+        return ["png", "svg", "jpg", "jpeg"];
+      },
     },
   },
   data() {
@@ -133,11 +139,18 @@ export default {
       });
       return acceptedTypes.includes(fileType);
     },
+    isValidFileSize(file) {
+      const fileSize = file.size / 1024 / 1024; // mb
+      return this.maxFileSize > fileSize;
+    },
     handleFileDrop(e) {
       const file = e.dataTransfer.files[0];
       if (!file) return;
-      else if (!this.isValidFileType(file)) {
-        return console.log("File type is invalid");
+      if (!this.isValidFileType(file)) {
+        return this.$emit("error:fileType");
+      }
+      if (!this.isValidFileSize(file)) {
+        return this.$emit("error:fileSize");
       }
       this.$emit("update:modelValue", file);
       this.isDragOver = false;
@@ -145,8 +158,11 @@ export default {
     handleFileInput(e) {
       const file = e.target.files[0];
       if (!file) return;
-      else if (!this.isValidFileType(file)) {
-        return console.log("Не вырный тип файла");
+      if (!this.isValidFileType(file)) {
+        return this.$emit("error:fileType");
+      }
+      if (!this.isValidFileSize(file)) {
+        return this.$emit("error:fileSize");
       }
       this.$emit("update:modelValue", file);
     },
@@ -163,110 +179,10 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-.image-input {
-  $v-image-input-color: #2c3e50 !default;
-  $v-image-input-color-hover: #4689cd !default;
-  $v-image-input-background: #fff !default;
-  $v-image-input-background-hover: #eee !default;
-  $v-image-input-rm-icon-color: #fff !default;
-  $v-image-input-rm-icon-color-hover: #000 !default;
-  $v-image-input-rm-icon-background: #2c3e50 !default;
-  $v-image-input-rm-icon-background-hover: #4689cd !default;
-  $v-image-input-width: 120px !default;
-  $v-image-input-height: 120px !default;
-  $v-image-input-empty-layout-padding: 20px !default;
-  $v-image-input-border: 1px solid $v-image-input-color !default;
-  $v-image-input-border-radius: 20px !default;
-  $v-image-input-object-fit: fill !default;
-
-  width: $v-image-input-width;
-  height: $v-image-input-height;
-
-  .wrapper {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    background: $v-image-input-background;
-    width: $v-image-input-width;
-    height: $v-image-input-height;
-    .remove-icon {
-      cursor: pointer;
-      border-radius: 50%;
-      background: $v-image-input-rm-icon-background;
-      color: $v-image-input-rm-icon-color;
-      fill: $v-image-input-rm-icon-color;
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      svg {
-        width: 25px;
-        height: 25px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      &:hover {
-        color: $v-image-input-rm-icon-color-hover;
-        fill: $v-image-input-rm-icon-color-hover;
-        background: $v-image-input-rm-icon-background-hover;
-      }
-    }
-  }
-  .selected-image {
-    object-fit: $v-image-input-object-fit;
-    &:hover {
-      opacity: 75%;
-    }
-  }
-  .input-label,
-  .selected-image {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: $v-image-input-width;
-    height: $v-image-input-height;
-    border: $v-image-input-border;
-    border-radius: $v-image-input-border-radius;
-    transition: all 0.3s;
-  }
-  .empty-layout {
-    padding: $v-image-input-empty-layout-padding;
-  }
-  .input-label {
-    transition: all 0.3s;
-    &:hover {
-      opacity: 75%;
-      background: $v-image-input-background-hover;
-      color: $v-image-input-color-hover;
-
-      svg {
-        fill: $v-image-input-color-hover;
-        color: $v-image-input-color-hover;
-      }
-    }
-  }
-  .input {
-    display: none;
-  }
-  .is-drag-over {
-    transition: all 0.3s;
-    opacity: 75%;
-    background: $v-image-input-background-hover;
-    color: $v-image-input-color-hover;
-
-    svg {
-      fill: $v-image-input-color-hover;
-      color: $v-image-input-color-hover;
-    }
-  }
 }
 </style>

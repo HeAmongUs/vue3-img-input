@@ -1,9 +1,18 @@
 <template>
   <div id="app">
     <h1>vue3-img-input</h1>
-    <v-image-input v-model="image1" />
+    <div class="img-container">
+      <v-image-input
+        v-model="image1"
+        :max-file-size="0.002"
+        @error:fileSize="logErrorFileSize"
+        @error:fileType="logErrorFileType"
+      />
+    </div>
     <h2>Removable</h2>
-    <v-image-input v-model="image2" removable />
+    <div class="img-container">
+      <v-image-input v-model="image2" removable />
+    </div>
   </div>
 </template>
 
@@ -20,11 +29,25 @@ export default {
       image2: null,
     };
   },
+  methods: {
+    logErrorFileSize() {
+      console.log("error:fileSize");
+    },
+    logErrorFileType() {
+      console.log("error:fileType");
+    },
+  },
 };
 </script>
 
-<style scoped lang="scss">
-#app {
-  margin: 40px;
+<style lang="scss">
+@import "@/styles/override.scss";
+@import "@/styles/style.scss";
+.img-container {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 240px;
+  height: 240px;
 }
 </style>

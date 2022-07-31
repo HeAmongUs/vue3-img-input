@@ -1,0 +1,111 @@
+$v-image-input-color: #2c3e50 !default;
+$v-image-input-color-hover: #4689cd !default;
+$v-image-input-background: #fff !default;
+$v-image-input-background-hover: #eee !default;
+$v-image-input-empty-layout-border-color: $v-image-input-color !default;
+
+$v-image-input-width: 100% !default;
+$v-image-input-height: 100% !default;
+
+$v-image-input-empty-layout-padding: 20px !default;
+$v-image-input-empty-layout-border: 1px solid $v-image-input-empty-layout-border-color !default;
+$v-image-input-border-radius: 20px !default;
+$v-image-input-object-fit: fill !default;
+
+$v-image-input-rm-icon-color: #fff !default;
+$v-image-input-rm-icon-size: 24px !default;
+$v-image-input-rm-icon-indent: -10px !default;
+$v-image-input-rm-icon-position: absolute !default;
+$v-image-input-rm-icon-border-radius: 50% !default;
+$v-image-input-rm-icon-transition: 0.3s !default;
+$v-image-input-rm-icon-color-hover: #000 !default;
+$v-image-input-rm-icon-background: #2c3e50 !default;
+$v-image-input-rm-icon-background-hover: #4689cd !default;
+
+.image-input {
+  width: $v-image-input-width;
+  height: $v-image-input-height;
+
+  .wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    background: $v-image-input-background;
+    width: 100%;
+    height: 100%;
+    border-radius: $v-image-input-border-radius;
+    .remove-icon {
+      cursor: pointer;
+      border-radius: $v-image-input-border-radius;
+      background: $v-image-input-rm-icon-background;
+      color: $v-image-input-rm-icon-color;
+      fill: $v-image-input-rm-icon-color;
+      position: $v-image-input-rm-icon-position;
+      top: $v-image-input-rm-icon-indent;
+      right: $v-image-input-rm-icon-indent;
+      transition: $v-image-input-rm-icon-transition;
+      svg {
+        width: $v-image-input-rm-icon-size;
+        height: $v-image-input-rm-icon-size;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      &:hover {
+        color: $v-image-input-rm-icon-color-hover;
+        fill: $v-image-input-rm-icon-color-hover;
+        background: $v-image-input-rm-icon-background-hover;
+      }
+    }
+  }
+  .selected-image {
+    object-fit: $v-image-input-object-fit;
+    &:hover {
+      opacity: 75%;
+    }
+  }
+  .input-label,
+  .selected-image {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: $v-image-input-border-radius;
+    transition: all 0.3s;
+  }
+  .empty-layout {
+    border: $v-image-input-empty-layout-border;
+    padding: $v-image-input-empty-layout-padding;
+  }
+  .input-label {
+    transition: all 0.3s;
+    &:hover {
+      opacity: 75%;
+      background: $v-image-input-background-hover;
+      color: $v-image-input-color-hover;
+
+      svg {
+        fill: $v-image-input-color-hover;
+        color: $v-image-input-color-hover;
+      }
+    }
+  }
+  .input {
+    display: none;
+  }
+  .is-drag-over {
+    transition: all 0.3s;
+    opacity: 75%;
+    background: $v-image-input-background-hover;
+    color: $v-image-input-color-hover;
+
+    svg {
+      fill: $v-image-input-color-hover;
+      color: $v-image-input-color-hover;
+    }
+  }
+}
