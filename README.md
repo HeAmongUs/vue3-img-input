@@ -1,7 +1,8 @@
 # vue3-img-input
 
-# Demo
-https://vue3-img-input.vercel.app/
+# Demo and docs
+https://vue3-img-input-exmaples.vercel.app/
+https://vue3-img-input-docs.vercel.app/guide/
 
 # Getting Started
 ## Installation
@@ -92,14 +93,12 @@ emits when the size of uploaded file is larger then `maxFileSize:Number` **props
     <v-image-input @error:fileSize="errorHandler" />
 ```
 
-## slots 
-1. slot name="empty-layout" default =>:
+## slot
+### #empty-layout
+change this for update empty-layout image|text
 
-![empty](src/assets/empty.png)
-
-2. slot name="remove-icon" default =>:
-
-![img_2.png](src/assets/img_2.png)
+### #remove-icon
+change this for update remove-icon
 
 ## SCSS Variables
 ```scss
@@ -107,13 +106,12 @@ $v-image-input-color: #2c3e50 !default;
 $v-image-input-color-hover: #4689cd !default;
 $v-image-input-background: #fff !default;
 $v-image-input-background-hover: #eee !default;
-$v-image-input-empty-layout-border-color: $v-image-input-color !default;
 
 $v-image-input-width: 100% !default;
 $v-image-input-height: 100% !default;
 
 $v-image-input-empty-layout-padding: 20px !default;
-$v-image-input-empty-layout-border: 1px solid $v-image-input-empty-layout-border-color !default;
+$v-image-input-empty-layout-border: 1px solid #2c3e50 !default;
 $v-image-input-border-radius: 20px !default;
 $v-image-input-object-fit: fill !default;
 
